@@ -1,121 +1,172 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
-import { CheckCircle2, ArrowRight } from 'lucide-react';
-import HeroMap from '@/components/home/HeroMap';
+import { CheckCircle2 } from 'lucide-react';
 
-const destinations = [
-    { name: 'Canada', id: 'canada', top: '25%', left: '22%', popupPosition: 'right' },
-    { name: 'USA', id: 'usa', top: '35%', left: '23%', popupPosition: 'right' },
-    { name: 'UK', id: 'uk', top: '23%', left: '47.5%', popupPosition: 'bottom' },
-    { name: 'Ireland', id: 'ireland', top: '23.5%', left: '45.5%', popupPosition: 'bottom' },
-    { name: 'Germany', id: 'germany', top: '25%', left: '51%', popupPosition: 'bottom' },
-    { name: 'Singapore', id: 'singapore', top: '57%', left: '76.5%', popupPosition: 'left' },
-    { name: 'Malaysia', id: 'malaysia', top: '55%', left: '75.5%', popupPosition: 'left' },
-    { name: 'Australia', id: 'australia', top: '78%', left: '86%', popupPosition: 'top' },
-    { name: 'New Zealand', id: 'new-zealand', top: '85%', left: '92%', popupPosition: 'top' },
+const heroImages = [
+    "/images/hero1.jpg",
+    "/images/hero2.jpg",
+    "/images/hero3.jpg",
+    "/images/hero4.jpg",
+    "/images/hero5.jpg",
+    "/images/hero6.jpg",
 ];
 
 export default function HeroSection() {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % heroImages.length);
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
-        <section
-            className="relative overflow-hidden pt-24 pb-20 lg:pt-32 lg:pb-32 text-white min-h-[90vh] flex items-center"
-            style={{ background: 'linear-gradient(115deg, #0B0F1A 0%, #0E1625 30%, #0F3D2E 60%, #09281F 100%)' }}
-        >
+        <>
+            <section className="hero">
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+                    .hero {
+                        position: relative;
+                        height: 100vh;
+                        overflow: hidden;
+                    }
 
-            {/* Very subtle world map texture background */}
-            <div
-                className="absolute inset-0 z-0 bg-no-repeat bg-center bg-cover opacity-[0.03] pointer-events-none mix-blend-overlay"
-                style={{
-                    backgroundImage: 'url("https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg")',
-                }}
-            />
+                    .slide {
+                        position: absolute;
+                        inset: 0;
+                        background-size: cover;
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        opacity: 0;
+                        transform: scale(1);
+                        transition: opacity 1.3s ease-in-out, transform 2s ease-out;
+                        z-index: 0;
+                    }
 
-            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pointer-events-none">
-                <div className="flex flex-col lg:flex-row gap-8 items-center justify-between">
+                    .slide.active {
+                        opacity: 1;
+                        transform: scale(1.04);
+                    }
+                `}} />
 
-                    {/* Left Side: Content */}
-                    <div className="text-center lg:text-left flex flex-col items-center lg:items-start w-full lg:max-w-[650px] pointer-events-auto animate-fade-in-up z-20 shrink-0">
-                        <div className="inline-block py-1.5 px-4 rounded-full bg-white/5 border border-white/10 text-white/90 mb-6 backdrop-blur-md text-sm font-medium shadow-sm">
-                            Eligibility Assessment • University Shortlisting • Visa & Application Support
-                        </div>
+                {heroImages.map((src, index) => (
+                    <div
+                        key={index}
+                        className={`slide ${index === currentIndex ? "active" : ""}`}
+                        style={{ backgroundImage: `url(${src})` }}
+                    />
+                ))}
 
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-[1.15]">
-                            Your Global Education.<br className="hidden md:block" /> Designed With Precision.
-                        </h1>
+                {/* Dark Overlay Gradient */}
+                <div
+                    className="absolute inset-0 z-[1]"
+                    style={{
+                        background: 'linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.65))'
+                    }}
+                />
 
-                        <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mb-10 font-light leading-relaxed">
-                            Strategic Admissions Guidance for Singapore, Malaysia, Germany & 8+ Global Destinations.
-                        </p>
+                {/* Content Layer */}
+                <div className="relative z-[2] w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-0 flex flex-col items-center">
 
-                        <div className="flex flex-col sm:flex-row w-full sm:w-auto items-center gap-4 mb-12">
-                            <Link href="#eligibility" className="w-full sm:w-auto">
-                                <Button size="lg" className="w-full sm:w-auto bg-gold hover:bg-gold-light text-primary font-bold border-none shadow-xl transition-all duration-300">
-                                    Check My Eligibility →
-                                </Button>
-                            </Link>
-                            <Link href="/book-consultation" className="w-full sm:w-auto">
-                                <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300">
-                                    Book Consultation
-                                </Button>
-                            </Link>
-                        </div>
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 text-white leading-[1.1] animate-fade-in-up">
+                        From Ambition to <br className="hidden md:block" /> <span className="text-[#10b981]">Admission.</span>
+                    </h1>
 
-                        {/* Animated Trust Strip */}
-                        <div className="w-full animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                            <div className="flex flex-wrap justify-center lg:justify-start items-center gap-x-6 gap-y-3 text-sm text-white/90 font-medium">
-                                <div className="flex items-center gap-2">
-                                    <CheckCircle2 className="text-gold h-4 w-4" />
-                                    <span>2,800+ Students Guided</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <CheckCircle2 className="text-gold h-4 w-4" />
-                                    <span>500+ University Pathways</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <CheckCircle2 className="text-gold h-4 w-4" />
-                                    <span>Dedicated Visa Support</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <CheckCircle2 className="text-gold h-4 w-4" />
-                                    <span>8+ Study Destinations</span>
-                                </div>
+                    <p className="text-lg sm:text-xl lg:text-2xl text-white/90 max-w-3xl mb-10 font-light leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                        We help ambitious students secure admissions, scholarships, and visas to the world’s most respected universities — with clarity, structure, and strategy.
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row items-center gap-4 mb-4 animate-fade-in-up w-full sm:w-auto" style={{ animationDelay: '0.2s' }}>
+                        <Link href="#start" className="w-full sm:w-auto">
+                            <Button size="lg" className="w-full sm:w-auto bg-[#10b981] hover:bg-[#059669] text-white font-bold border-none shadow-xl transition-all duration-300 h-14 px-8 text-lg">
+                                Start My Journey
+                            </Button>
+                        </Link>
+                        <Link href="#eligibility" className="w-full sm:w-auto">
+                            <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 h-14 px-8 text-lg max-w-[300px] mx-auto sm:max-w-none">
+                                Check My Eligibility
+                            </Button>
+                        </Link>
+                    </div>
+
+                    <p className="text-sm text-white/70 mb-12 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                        Free strategic consultation. No obligation.
+                    </p>
+
+                    {/* Metrics Row */}
+                    <div className="w-full flex justify-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                        <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-white/90 font-medium whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                                <CheckCircle2 className="text-[#10b981] h-4 w-4" />
+                                <span className="text-sm sm:text-base">2,800+ Students Placed</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <CheckCircle2 className="text-[#10b981] h-4 w-4" />
+                                <span className="text-sm sm:text-base">500+ University Pathways</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <CheckCircle2 className="text-[#10b981] h-4 w-4" />
+                                <span className="text-sm sm:text-base">9 Countries</span>
                             </div>
                         </div>
                     </div>
-
-                    {/* Right Side: Interactive World Map Interface */}
-                    <div className="hidden lg:flex w-full lg:w-[55%] min-w-[600px] relative items-center justify-center pointer-events-auto pr-8 animate-fade-in-up scale-110 -ml-8 lg:-translate-x-4 shrink-0 z-0" style={{ animationDelay: '0.2s' }}>
-                        <HeroMap />
-                    </div>
-
                 </div>
 
-                {/* Mobile Only: Simple Destination List (replaces map on small screens) */}
-                <div className="lg:hidden w-full flex flex-col gap-3 animate-fade-in-up mt-8 pointer-events-auto" style={{ animationDelay: '0.4s' }}>
-                    <h3 className="text-lg font-bold text-white mb-2 text-center">Popular Destinations</h3>
-                    {destinations.slice(0, 5).map((dest) => (
-                        <Link key={dest.id} href={`/study-in-${dest.id}`} className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center justify-between hover:bg-white/10 transition-colors">
-                            <span className="font-medium text-white">{dest.name}</span>
-                            <ArrowRight className="w-4 h-4 text-white/50" />
-                        </Link>
+                {/* Smooth Rounded Bottom Curve */}
+                <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-20 pointer-events-none translate-y-[1px]">
+                    <svg
+                        viewBox="0 0 1440 100"
+                        className="block w-full h-[60px] md:h-[100px]"
+                        preserveAspectRatio="none"
+                        style={{ filter: "drop-shadow(0px -4px 10px rgba(0,0,0,0.1))" }}
+                    >
+                        <path d="M0,100 C360,0 1080,0 1440,100 Z" fill="#ffffff" />
+                    </svg>
+                </div>
+            </section>
+
+            {/* Trusted By Moving Strip */}
+            <div className="bg-white py-4 overflow-hidden border-b border-gray-100 flex items-center relative z-10 w-full">
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+                    @keyframes scrollLeftStrip {
+                        0% { transform: translateX(0); }
+                        100% { transform: translateX(-50%); }
+                    }
+                    .animate-scroll-strip {
+                        animation: scrollLeftStrip 25s linear infinite;
+                        width: max-content;
+                        display: flex;
+                    }
+                `}} />
+                <div className="animate-scroll-strip">
+                    {[...Array(2)].map((_, i) => (
+                        <div key={i} className="flex gap-8 px-4 items-center text-sm sm:text-base font-bold tracking-[0.2em] text-gray-500 uppercase whitespace-nowrap">
+                            <span>Trusted by students admitted to</span>
+                            <span className="text-gray-900">TU Munich</span>
+                            <span>•</span>
+                            <span className="text-gray-900">NUS Singapore</span>
+                            <span>•</span>
+                            <span className="text-gray-900">University of Malaya</span>
+                            <span>•</span>
+                            <span className="text-gray-900">RWTH Aachen</span>
+                            <span>•</span>
+                            <span className="text-gray-900">Trinity College</span>
+                            <span>•</span>
+                            <span className="text-gray-900">University of Toronto</span>
+                            <span>•</span>
+                            <span className="text-gray-900">Monash University</span>
+                            <span>•</span>
+                            <span className="text-gray-900">National University of Ireland</span>
+                        </div>
                     ))}
-                    <Link href="/destinations" className="text-center text-sm text-gold font-medium mt-2">
-                        View all 9 destinations →
-                    </Link>
                 </div>
             </div>
-
-            {/* Sticky Mobile CTA */}
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-[#09281F]/90 backdrop-blur-md border-t border-white/10 z-50 transform translate-y-0 transition-transform">
-                <Link href="#eligibility" className="block w-full">
-                    <Button size="lg" className="w-full bg-gold hover:bg-gold-light text-primary font-bold border-none shadow-xl">
-                        Check Eligibility
-                    </Button>
-                </Link>
-            </div>
-
-        </section>
+        </>
     );
 }
