@@ -7,21 +7,70 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* Loading Screen Brand Animations */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(115deg,
+      #0B0F1A 0%,
+      #0E1625 40%,
+      #0F3D2E 70%,
+      #09281F 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.bounce-logo {
+  width: 90px;
+  height: auto;
+  animation: bounce 0.9s ease-in-out 2;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  30% {
+    transform: translateY(-22px);
+  }
+
+  60% {
+    transform: translateY(0);
+  }
+
+  75% {
+    transform: translateY(-12px);
+  }
+}
+
+.bounce-logo.infinite {
+  animation: bounceInfinite 1s ease-in-out infinite;
+}
+
+@keyframes bounceInfinite {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-22px);
   }
 }
