@@ -73,8 +73,19 @@ export default function HeroSection() {
                 {/* Content Layer */}
                 <div className="relative z-[2] w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-0 flex flex-col items-center">
 
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 text-white leading-[1.1] animate-fade-in-up">
-                        From Ambition to <br className="hidden md:block" /> <span className="text-[#10b981]">Admission.</span>
+                    <h1
+                        className="text-[2.5rem] sm:text-[3.25rem] md:text-[4.25rem] lg:text-[5rem] font-[800] tracking-[-0.02em] leading-[1.05] mb-6 text-white animate-fade-in-up"
+                        style={{ fontFamily: 'var(--font-jakarta), var(--font-inter), sans-serif' }}
+                    >
+                        From Ambition to <br className="hidden md:block" />
+                        <span
+                            style={{
+                                background: 'linear-gradient(90deg, #10b981 0%, #34d399 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text',
+                            }}
+                        >Admission.</span>
                     </h1>
 
                     <p className="text-lg sm:text-xl lg:text-2xl text-white/90 max-w-3xl mb-10 font-light leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
@@ -83,7 +94,7 @@ export default function HeroSection() {
 
                     <div className="flex flex-col sm:flex-row items-center gap-4 mb-4 animate-fade-in-up w-full sm:w-auto" style={{ animationDelay: '0.2s' }}>
                         <Link href="#start" className="w-full sm:w-auto">
-                            <Button size="lg" className="w-full sm:w-auto bg-[#10b981] hover:bg-[#059669] text-white font-bold border-none shadow-xl transition-all duration-300 h-14 px-8 text-lg">
+                            <Button size="lg" className="w-full sm:w-auto bg-[#10b981] hover:bg-[#059669] text-white font-bold border-none shadow-xl transition-all duration-300 h-14 px-8 text-lg hover:shadow-[0_0_22px_rgba(16,185,129,0.4)]">
                                 Start My Journey
                             </Button>
                         </Link>

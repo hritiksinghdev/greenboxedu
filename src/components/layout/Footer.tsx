@@ -7,7 +7,10 @@ export function Footer() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-8">
                     <div className="col-span-1 md:col-span-1 border-r border-primary-foreground/10 pr-8">
-                        <h3 className="text-2xl font-bold mb-4">Green Box<br />Edu Pathway</h3>
+                        <div className="mb-4 flex items-baseline gap-1">
+                            <h3 className="text-2xl font-extrabold tracking-tight">Greenbox</h3>
+                            <span className="text-xl font-medium text-[#10b981]">Edu</span>
+                        </div>
                         <p className="text-primary-foreground/70 text-sm leading-relaxed mb-6">
                             Your premium, end-to-end partner for studying abroad in Singapore, Malaysia, Germany, and beyond. We build confidence and clear pathways.
                         </p>
@@ -68,7 +71,7 @@ export function Footer() {
                 </div>
 
                 <div className="mt-16 pt-8 border-t border-primary-foreground/10 text-center text-primary-foreground/50 text-sm">
-                    <p>&copy; {new Date().getFullYear()} Green Box Edu Pathway. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} Greenbox Edu. All rights reserved.</p>
                 </div>
             </div>
         </footer>
