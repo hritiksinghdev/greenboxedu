@@ -74,6 +74,11 @@ export default function WhyChooseUsSection() {
         };
     }, [activeIndex]);
 
+    // Debug: log activeIndex changes
+    useEffect(() => {
+        console.log('Modal activeIndex:', activeIndex);
+    }, [activeIndex]);
+
     return (
         <section className="py-24 bg-white relative">
             <style dangerouslySetInnerHTML={{
@@ -120,13 +125,14 @@ export default function WhyChooseUsSection() {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 w-screen h-screen">
                     {/* Subtle Backdrop */}
                     <div
-                        className="absolute inset-0 bg-slate-900/20 backdrop-blur-[2px] transition-opacity duration-300"
+                        className="absolute inset-0 bg-transparent backdrop-blur-sm transition-opacity duration-300"
                         onClick={() => setActiveIndex(null)}
                     />
 
                     {/* Modal Content - Centered firmly with scale animation */}
                     <div
                         className="bg-white rounded-3xl p-8 max-w-md w-full relative z-10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 animate-modal"
+                        onClick={e => e.stopPropagation()}
                     >
                         <button
                             onClick={() => setActiveIndex(null)}

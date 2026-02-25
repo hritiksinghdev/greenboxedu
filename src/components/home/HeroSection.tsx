@@ -15,17 +15,18 @@ const heroImages = [
 ];
 
 const universities = [
-    { name: "TU Munich", logo: "https://logo.clearbit.com/tum.de" },
-    { name: "NUS Singapore", logo: "https://logo.clearbit.com/nus.edu.sg" },
-    { name: "Univ. of Melbourne", logo: "https://logo.clearbit.com/unimelb.edu.au" },
-    { name: "Univ. of Toronto", logo: "https://logo.clearbit.com/utoronto.ca" },
-    { name: "RWTH Aachen", logo: "https://logo.clearbit.com/rwth-aachen.de" },
+    { name: "TU Munich", logo: "/universities/tu-munich.svg" },
+    { name: "NUS Singapore", logo: "/universities/nus.svg" },
+    { name: "Univ. of Melbourne", logo: "/universities/melbourne.svg" },
+    { name: "Univ. of Toronto", logo: "/universities/toronto.svg" },
+    { name: "RWTH Aachen", logo: "/universities/rwth-aachen.svg" },
 ];
 
 const duplicatedUniversities = [...universities, ...universities, ...universities, ...universities];
 
 export default function HeroSection() {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [carouselIdx, setCarouselIdx] = useState(0);
     const trackRef = useRef<HTMLDivElement>(null);
     const rAF = useRef<number | null>(null);
 
@@ -87,6 +88,14 @@ export default function HeroSection() {
         return () => {
             if (rAF.current) cancelAnimationFrame(rAF.current);
         };
+    }, []);
+
+    // Carousel auto-advance
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCarouselIdx(prev => (prev + 1) % universities.length);
+        }, 3000);
+        return () => clearInterval(timer);
     }, []);
 
     return (
@@ -235,42 +244,45 @@ export default function HeroSection() {
                     </p>
                 </div>
 
-                <div
-                    ref={trackRef}
-                    className="relative w-full mx-auto h-[140px] flex items-center overflow-hidden"
-                    style={{ maxWidth: '1440px' }}
-                >
+                <div className="relative w-full mx-auto h-[140px] flex items-center justify-center overflow-hidden" style={{ maxWidth: '1440px' }}>
                     {/* Ghost mask to fade edges */}
                     <div className="absolute inset-0 z-20 pointer-events-none"
                         style={{ background: 'linear-gradient(to right, white 0%, transparent 15%, transparent 85%, white 100%)' }}
                     />
-
-                    {duplicatedUniversities.map((uni, index) => (
-                        <div
-                            key={index}
-                            className="absolute top-1/2 left-0 will-change-transform pointer-events-none"
-                            style={{
-                                width: '260px',
-                                // Initial setup handled by requestAnimationFrame immediately
-                                opacity: 0,
-                            }}
-                        >
-                            <div className="bg-white/80 backdrop-blur-md border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-2xl p-4 sm:p-6 mx-auto w-[180px] sm:w-[220px] flex flex-col items-center justify-center gap-4 transition-none">
-                                <div className="h-[40px] sm:h-[50px] flex items-center justify-center w-full relative">
+                    {/* Carousel items */}
+                    {(() => {
+                        const len = universities.length;
+                        const prevIdx = (carouselIdx - 1 + len) % len;
+                        const nextIdx = (carouselIdx + 1) % len;
+                        const items = [
+                            { uni: universities[prevIdx], position: 'left' },
+                            { uni: universities[carouselIdx], position: 'center' },
+                            { uni: universities[nextIdx], position: 'right' },
+                        ];
+                        return items.map(({ uni, position }) => {
+                            const isCenter = position === 'center';
+                            const scale = isCenter ? 1.2 : 0.9;
+                            const blur = isCenter ? 0 : 4;
+                            const opacity = isCenter ? 1 : 0.7;
+                            const translateX = position === 'left' ? '-20%' : position === 'right' ? '20%' : '0';
+                            return (
+                                <div
+                                    key={uni.name}
+                                    className="flex flex-col items-center transition-all duration-700"
+                                    style={{
+                                        transform: `translateX(${translateX}) scale(${scale})`,
+                                        filter: `blur(${blur}px)`,
+                                        opacity,
+                                        margin: '0 12px',
+                                    }}
+                                >
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src={uni.logo}
-                                        alt={uni.name}
-                                        className="h-full w-auto object-contain max-w-[120px] sm:max-w-[150px]"
-                                        loading="lazy"
-                                    />
+                                    <img src={uni.logo} alt={uni.name} className="h-12 w-auto object-contain" loading="lazy" />
+                                    <span className="text-sm mt-2 text-slate-700 whitespace-nowrap">{uni.name}</span>
                                 </div>
-                                <span className="text-xs sm:text-sm font-semibold text-slate-700 whitespace-nowrap">
-                                    {uni.name}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
+                            );
+                        });
+                    })()}
                 </div>
             </div>
         </>
