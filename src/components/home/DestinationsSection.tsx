@@ -3,11 +3,11 @@ import { ArrowRight } from 'lucide-react';
 
 const destinations = [
     { name: "Singapore", image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&q=80&w=800", highlight: "Asia's Education Hub" },
-    { name: "Malaysia", image: "https://images.unsplash.com/photo-1596422846543-74c6c221b61c?auto=format&fit=crop&q=80&w=800", highlight: "Affordable Quality" },
+    { name: "Malaysia", image: "https://images.unsplash.com/photo-1583417319070-4a69db38a482?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", highlight: "Affordable Quality" },
     { name: "Germany", image: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&q=80&w=800", highlight: "Engineering Excellence" },
     { name: "UK", image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=800", highlight: "Historic Prestige" },
     { name: "Canada", image: "https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&q=80&w=800", highlight: "Welcoming & Diverse" },
-    { name: "Australia", image: "https://images.unsplash.com/photo-1523482580662-fcc65ba5ab07?auto=format&fit=crop&q=80&w=800", highlight: "Top Global Rankings" },
+    { name: "Australia", image: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", highlight: "Top Global Rankings" },
     { name: "USA", image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&q=80&w=800", highlight: "Innovation Leader" },
     { name: "Ireland", image: "https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?auto=format&fit=crop&q=80&w=800", highlight: "Tech Headquarters" },
     { name: "New Zealand", image: "https://images.unsplash.com/photo-1469521669194-babb45599def?auto=format&fit=crop&q=80&w=800", highlight: "High Quality of Life" },

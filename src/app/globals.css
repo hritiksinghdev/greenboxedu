@@ -2,31 +2,160 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== DESIGN TOKENS ===== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-base: #F8FAFC;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-brand: rgba(16, 185, 129, 0.25);
+  --text-primary: #0F172A;
+  --text-muted: #64748B;
+  --brand: #10b981;
+  --brand-hover: #059669;
+  --font-jakarta: var(--font-jakarta);
+  --font-inter: var(--font-inter);
+}
+
+/* ===== GLOBAL BASE ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--text-primary);
+  background: var(--bg-base);
+  background-attachment: fixed;
+  font-family: var(--font-jakarta, var(--font-inter, sans-serif));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* ===== PAGE FADE-IN ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Loading Screen Brand Animations */
+.page-enter {
+  animation: fadeIn 0.35s ease both;
+}
+
+/* ===== LIQUID GLASS UTILITY ===== */
+.glass {
+  background: rgba(10, 18, 32, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* ===== SECTION SYSTEM ===== */
+.section-base {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.container-base {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* ===== CARD SYSTEM ===== */
+.card-dark {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0.75rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.card-dark:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* ===== BRAND GREEN TEXT GRADIENT ===== */
+.text-brand-gradient {
+  background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== ANIMATE FADE IN UP ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease both;
+}
+
+/* ===== HERO AMBIENT GLOW ===== */
+.hero-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand);
+}
+
+/* ===== LOADING SCREEN ===== */
 .loading-screen {
   position: fixed;
   inset: 0;
-  background: linear-gradient(115deg,
-      #0B0F1A 0%,
-      #0E1625 40%,
-      #0F3D2E 70%,
-      #09281F 100%);
+  background: linear-gradient(115deg, #0B0F1A 0%, #0E1625 40%, #0F3D2E 70%, #09281F 100%);
   display: flex;
   justify-content: center;
   align-items: center;

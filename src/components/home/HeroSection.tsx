@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { CheckCircle2 } from 'lucide-react';
@@ -14,15 +14,79 @@ const heroImages = [
     "/images/hero6.jpg",
 ];
 
+const universities = [
+    { name: "TU Munich", logo: "https://logo.clearbit.com/tum.de" },
+    { name: "NUS Singapore", logo: "https://logo.clearbit.com/nus.edu.sg" },
+    { name: "Univ. of Melbourne", logo: "https://logo.clearbit.com/unimelb.edu.au" },
+    { name: "Univ. of Toronto", logo: "https://logo.clearbit.com/utoronto.ca" },
+    { name: "RWTH Aachen", logo: "https://logo.clearbit.com/rwth-aachen.de" },
+];
+
+const duplicatedUniversities = [...universities, ...universities, ...universities, ...universities];
+
 export default function HeroSection() {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const trackRef = useRef<HTMLDivElement>(null);
+    const rAF = useRef<number | null>(null);
 
+    // Hero background slider
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % heroImages.length);
         }, 5000);
 
         return () => clearInterval(interval);
+    }, []);
+
+    // Marquee continuous right to left logic
+    useEffect(() => {
+        let offset = 0;
+        const ITEM_WIDTH = 260; // Approximate card width + gap tracking
+        const totalPixels = universities.length * ITEM_WIDTH;
+
+        const animate = () => {
+            offset -= 1.2; // Speed of motion Right -> Left
+            // Seamless wrap around when one full original set is off-screen
+            if (offset <= -totalPixels) {
+                offset += totalPixels;
+            }
+
+            if (trackRef.current) {
+                const containerWidth = trackRef.current.clientWidth;
+                const containerCenter = containerWidth / 2;
+                const children = trackRef.current.children;
+
+                for (let i = 0; i < children.length; i++) {
+                    const child = children[i] as HTMLElement;
+                    // X position relative to track
+                    const baseItemX = (i * ITEM_WIDTH) + offset;
+                    // Center point of this specific item
+                    const itemCenter = baseItemX + (ITEM_WIDTH / 2);
+
+                    // Distance from the exact center of the container
+                    const dist = Math.abs(containerCenter - itemCenter);
+
+                    // Factor calculations for scale and blur
+                    const centerFactor = Math.max(0, 1 - dist / (ITEM_WIDTH * 1.5));
+
+                    const scale = 0.90 + (0.25 * centerFactor); // Scale between 0.90 to 1.15
+                    const blur = 6 - (6 * centerFactor); // Blur between 6px to 0px
+                    const opacity = 0.5 + (0.5 * centerFactor); // Opacity 0.5 to 1
+                    const zIndex = Math.round(10 * centerFactor);
+
+                    child.style.transform = `translate(${baseItemX}px, -50%) scale(${scale})`;
+                    child.style.filter = `blur(${blur}px)`;
+                    child.style.opacity = opacity.toString();
+                    child.style.zIndex = zIndex.toString();
+                }
+            }
+            rAF.current = requestAnimationFrame(animate);
+        };
+
+        rAF.current = requestAnimationFrame(animate);
+        return () => {
+            if (rAF.current) cancelAnimationFrame(rAF.current);
+        };
     }, []);
 
     return (
@@ -62,22 +126,32 @@ export default function HeroSection() {
                     />
                 ))}
 
-                {/* Dark Overlay Gradient */}
+                {/* Dark Overlay Gradient — boosted for readability */}
                 <div
                     className="absolute inset-0 z-[1]"
                     style={{
-                        background: 'linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.65))'
+                        background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.40) 40%, rgba(0,0,0,0.70) 100%)'
                     }}
                 />
 
-                {/* Content Layer */}
-                <div className="relative z-[2] w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-0 flex flex-col items-center">
+                {/* Content Layer — pushed below the floating navbar */}
+                <div className="relative z-[2] w-full h-full flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8"
+                    style={{ paddingTop: 'clamp(88px, 10vh, 120px)' }}
+                >
 
+                    {/* TWO-LINE HEADLINE */}
                     <h1
-                        className="text-[2.5rem] sm:text-[3.25rem] md:text-[4.25rem] lg:text-[5rem] font-[800] tracking-[-0.02em] leading-[1.05] mb-6 text-white animate-fade-in-up"
-                        style={{ fontFamily: 'var(--font-jakarta), var(--font-inter), sans-serif' }}
+                        className="animate-fade-in-up mb-4 text-white"
+                        style={{
+                            fontFamily: 'var(--font-jakarta), var(--font-inter), sans-serif',
+                            fontWeight: 800,
+                            letterSpacing: '-0.03em',
+                            lineHeight: 1.05,
+                            fontSize: 'clamp(2.5rem, 6.5vw, 5.5rem)',
+                        }}
                     >
-                        From Ambition to <br className="hidden md:block" />
+                        From Ambition<br />
+                        To{' '}
                         <span
                             style={{
                                 background: 'linear-gradient(90deg, #10b981 0%, #34d399 100%)',
@@ -88,41 +162,53 @@ export default function HeroSection() {
                         >Admission.</span>
                     </h1>
 
-                    <p className="text-lg sm:text-xl lg:text-2xl text-white/90 max-w-3xl mb-10 font-light leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                        We help ambitious students secure admissions, scholarships, and visas to the world’s most respected universities — with clarity, structure, and strategy.
+                    {/* THREE-WORD TAGLINE */}
+                    <p
+                        className="animate-fade-in-up mb-10"
+                        style={{
+                            animationDelay: '0.1s',
+                            fontSize: '0.6875rem',
+                            fontWeight: 700,
+                            letterSpacing: '0.22em',
+                            textTransform: 'uppercase',
+                            color: 'rgba(255,255,255,0.45)',
+                        }}
+                    >
+                        Clarity.&nbsp;&nbsp;Strategy.&nbsp;&nbsp;Success.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4 mb-4 animate-fade-in-up w-full sm:w-auto" style={{ animationDelay: '0.2s' }}>
-                        <Link href="#start" className="w-full sm:w-auto">
-                            <Button size="lg" className="w-full sm:w-auto bg-[#10b981] hover:bg-[#059669] text-white font-bold border-none shadow-xl transition-all duration-300 h-14 px-8 text-lg hover:shadow-[0_0_22px_rgba(16,185,129,0.4)]">
+                    {/* CTA BUTTONS — centered */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                        <Link href="#start">
+                            <Button size="lg" className="bg-[#10b981] hover:bg-[#059669] text-white font-bold border-none shadow-xl transition-all duration-300 h-14 px-8 text-lg hover:shadow-[0_0_22px_rgba(16,185,129,0.4)] min-w-[200px]">
                                 Start My Journey
                             </Button>
                         </Link>
-                        <Link href="#eligibility" className="w-full sm:w-auto">
-                            <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 h-14 px-8 text-lg max-w-[300px] mx-auto sm:max-w-none">
+                        <Link href="#eligibility">
+                            <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 h-14 px-8 text-lg min-w-[200px]">
                                 Check My Eligibility
                             </Button>
                         </Link>
                     </div>
 
-                    <p className="text-sm text-white/70 mb-12 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                        Free strategic consultation. No obligation.
+                    <p className="text-xs text-white/45 mb-10 animate-fade-in-up tracking-wider uppercase" style={{ animationDelay: '0.3s' }}>
+                        Free strategic consultation &nbsp;·&nbsp; No obligation
                     </p>
 
-                    {/* Metrics Row */}
+                    {/* Metrics Row — centered */}
                     <div className="w-full flex justify-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                        <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-white/90 font-medium whitespace-nowrap">
+                        <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-white/80 font-medium whitespace-nowrap">
                             <div className="flex items-center gap-2">
-                                <CheckCircle2 className="text-[#10b981] h-4 w-4" />
-                                <span className="text-sm sm:text-base">2,800+ Students Placed</span>
+                                <CheckCircle2 className="text-[#10b981] h-4 w-4 flex-shrink-0" />
+                                <span className="text-sm">2,800+ Students Placed</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <CheckCircle2 className="text-[#10b981] h-4 w-4" />
-                                <span className="text-sm sm:text-base">500+ University Pathways</span>
+                                <CheckCircle2 className="text-[#10b981] h-4 w-4 flex-shrink-0" />
+                                <span className="text-sm">500+ University Pathways</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <CheckCircle2 className="text-[#10b981] h-4 w-4" />
-                                <span className="text-sm sm:text-base">9 Countries</span>
+                                <CheckCircle2 className="text-[#10b981] h-4 w-4 flex-shrink-0" />
+                                <span className="text-sm">9 Countries</span>
                             </div>
                         </div>
                     </div>
@@ -141,39 +227,48 @@ export default function HeroSection() {
                 </div>
             </section>
 
-            {/* Trusted By Moving Strip */}
-            <div className="bg-white py-4 overflow-hidden border-b border-gray-100 flex items-center relative z-10 w-full">
-                <style dangerouslySetInnerHTML={{
-                    __html: `
-                    @keyframes scrollLeftStrip {
-                        0% { transform: translateX(0); }
-                        100% { transform: translateX(-50%); }
-                    }
-                    .animate-scroll-strip {
-                        animation: scrollLeftStrip 25s linear infinite;
-                        width: max-content;
-                        display: flex;
-                    }
-                `}} />
-                <div className="animate-scroll-strip">
-                    {[...Array(2)].map((_, i) => (
-                        <div key={i} className="flex gap-8 px-4 items-center text-sm sm:text-base font-bold tracking-[0.2em] text-gray-500 uppercase whitespace-nowrap">
-                            <span>Trusted by students admitted to</span>
-                            <span className="text-gray-900">TU Munich</span>
-                            <span>•</span>
-                            <span className="text-gray-900">NUS Singapore</span>
-                            <span>•</span>
-                            <span className="text-gray-900">University of Malaya</span>
-                            <span>•</span>
-                            <span className="text-gray-900">RWTH Aachen</span>
-                            <span>•</span>
-                            <span className="text-gray-900">Trinity College</span>
-                            <span>•</span>
-                            <span className="text-gray-900">University of Toronto</span>
-                            <span>•</span>
-                            <span className="text-gray-900">Monash University</span>
-                            <span>•</span>
-                            <span className="text-gray-900">National University of Ireland</span>
+            {/* ── TRUSTED UNIVERSITIES SHOWCASE ── */}
+            <div className="bg-white pt-8 pb-12 overflow-hidden relative border-b border-gray-100">
+                <div className="text-center mb-10 relative z-10 w-full max-w-lg mx-auto bg-white" style={{ isolation: 'isolate' }}>
+                    <p className="text-[0.625rem] font-bold tracking-[0.22em] uppercase text-slate-400">
+                        Trusted by students admitted to
+                    </p>
+                </div>
+
+                <div
+                    ref={trackRef}
+                    className="relative w-full mx-auto h-[140px] flex items-center overflow-hidden"
+                    style={{ maxWidth: '1440px' }}
+                >
+                    {/* Ghost mask to fade edges */}
+                    <div className="absolute inset-0 z-20 pointer-events-none"
+                        style={{ background: 'linear-gradient(to right, white 0%, transparent 15%, transparent 85%, white 100%)' }}
+                    />
+
+                    {duplicatedUniversities.map((uni, index) => (
+                        <div
+                            key={index}
+                            className="absolute top-1/2 left-0 will-change-transform pointer-events-none"
+                            style={{
+                                width: '260px',
+                                // Initial setup handled by requestAnimationFrame immediately
+                                opacity: 0,
+                            }}
+                        >
+                            <div className="bg-white/80 backdrop-blur-md border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-2xl p-4 sm:p-6 mx-auto w-[180px] sm:w-[220px] flex flex-col items-center justify-center gap-4 transition-none">
+                                <div className="h-[40px] sm:h-[50px] flex items-center justify-center w-full relative">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={uni.logo}
+                                        alt={uni.name}
+                                        className="h-full w-auto object-contain max-w-[120px] sm:max-w-[150px]"
+                                        loading="lazy"
+                                    />
+                                </div>
+                                <span className="text-xs sm:text-sm font-semibold text-slate-700 whitespace-nowrap">
+                                    {uni.name}
+                                </span>
+                            </div>
                         </div>
                     ))}
                 </div>

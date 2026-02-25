@@ -91,7 +91,7 @@ export default function DestinationsPage() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {destinations.map((dest) => (
-                            <Link key={dest.slug} href={`/study-in-${dest.slug}`} className="group block h-full">
+                            <Link key={dest.slug} href={`/destinations/${dest.slug}`} className="group block h-full">
                                 <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:border-gold/30 transition-all duration-300 h-full flex flex-col">
                                     {/* Image Container */}
                                     <div className="relative h-48 overflow-hidden">
